@@ -37,6 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',  # app for djangorestframework==3.12.2
+
+    'oauth2_provider',  # apps for django-rest-framework-social-oauth2
+    'social_django',
+    'drf_social_oauth2',
+
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +55,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',  # cors headers middleware
+    'django.middleware.common.CommonMiddleware',
+
+    'password_vault.middleware.MyMiddleware'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    'http://localhost:3000'
 ]
 
 ROOT_URLCONF = 'password_vault.urls'
@@ -62,21 +80,61 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # OAuth
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
+LOGIN_URL = '/auth/login/'
+
 WSGI_APPLICATION = 'password_vault.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
+        'drf_social_oauth2.authentication.SocialAuthentication',
+    ),
+}
+
+
+AUTHENTICATION_BACKENDS = (
+
+    # Google OAuth2
+    'social_core.backends.google.GoogleOAuth2',
+
+   'drf_social_oauth2.backends.DjangoOAuth2',
+
+   'django.contrib.auth.backends.ModelBackend',
+)
+
+
+# Google configuration
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "1046733497997-fupu7ag3524l5re9o0fuhcm5d3a8r8gp.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "BU-elU8uG6E8vYKTfFVYEtko"
+
+
+# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'password_vault',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
