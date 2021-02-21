@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  database:
+    container_name: postgres_db
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=password_vault
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - the_net
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  backend:
+    container_name: django_backend
+    image: vinaynb63/password_vault_be:dev
+    command: python password_vault/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - the_net
+    restart: always
+
+networks:
+  the_net:

@@ -130,15 +130,14 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 
 DATABASES = {
      'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'password_vault',
         'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'PASSWORD': "postgres",
+        'HOST': 'database',
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
