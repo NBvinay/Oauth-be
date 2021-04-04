@@ -1,2 +1,2 @@
 # PasswordVault
-Django app for the project Password Vault
+Django app for the Google Oauth 2.0
